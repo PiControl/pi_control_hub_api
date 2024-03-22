@@ -1,0 +1,481 @@
+openapi: 3.0.3
+info:
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: PiControl Hub API
+  version: 0.1.0
+servers:
+- url: /
+paths:
+  /device-drivers:
+    get:
+      description: Read all installed device drivers
+      operationId: readDeviceDrivers
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceDrivers'
+          description: Successfully read the installed drivers
+        "406":
+          description: Not Acceptable
+  /device-drivers/{driverId}/devices:
+    get:
+      description: Read all devices that are supported by the driver with the given
+        driver ID
+      operationId: readDevices
+      parameters:
+      - description: Driver ID
+        explode: false
+        in: path
+        name: driverId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceInfos'
+          description: Successfully read the devices
+        "404":
+          description: Driver not found.
+        "406":
+          description: Not Acceptable
+  /device-drivers/{driverId}/devices/{deviceId}/start_pairing:
+    post:
+      description: Start the pairing process for the device with the given device
+        ID.
+      operationId: startPairing
+      parameters:
+      - description: Driver ID
+        explode: false
+        in: path
+        name: driverId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Device ID
+        explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartPairingRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartPairingResponse'
+          description: Successfully started pairing
+        "404":
+          description: Driver or device not found.
+        "406":
+          description: Not Acceptable
+  /device-drivers/{driverId}/devices/{deviceId}/finalize_pairing/{pairingRequestId}:
+    post:
+      description: Finalize the pairing process for the device with the given device
+        ID.
+      operationId: finalizePairing
+      parameters:
+      - description: Driver ID
+        explode: false
+        in: path
+        name: driverId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Device ID
+        explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Pairing Request ID
+        explode: false
+        in: path
+        name: pairingRequestId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizePairingRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinalizePairingResponse'
+          description: Successfully finalized pairing
+        "404":
+          description: "Driver, device or pairing request not found."
+        "406":
+          description: Not Acceptable
+  /paired-devices:
+    get:
+      description: Read the list of paired devices.
+      operationId: readPairedDevices
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PairedDevices'
+          description: Successfully read the paired devices.
+        "406":
+          description: Not Acceptable
+  /paired-devices/{pairingId}:
+    delete:
+      description: Unpair the device.
+      operationId: unpairDevice
+      parameters:
+      - description: Pairing ID
+        explode: false
+        in: path
+        name: pairingId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Successfully read the unpaired the device.
+        "404":
+          description: Pairing not found.
+  /paired-devices/{pairingId}/commands:
+    get:
+      description: Get the commands supported by the device.
+      operationId: readDeviceCommands
+      parameters:
+      - description: Pairing ID
+        explode: false
+        in: path
+        name: pairingId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCommands'
+          description: Successfully read the commands of the paired device.
+        "404":
+          description: Pairing not found.
+        "406":
+          description: Not Acceptable
+  /paired-devices/{pairingId}/remote-layout:
+    get:
+      description: Get the layout of the remote control for the device.
+      operationId: readDeviceRemoteLayout
+      parameters:
+      - description: Pairing ID
+        explode: false
+        in: path
+        name: pairingId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteLayout'
+          description: Successfully read the remote of the paired device.
+        "404":
+          description: Pairing not found.
+        "406":
+          description: Not Acceptable
+  /paired-devices/{pairingId}/execute-command/{commandId}:
+    post:
+      description: Execute the command on the paired device.
+      operationId: executeDeviceCommand
+      parameters:
+      - description: Pairing ID
+        explode: false
+        in: path
+        name: pairingId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Command ID
+        explode: false
+        in: path
+        name: commandId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Successfully read the remote of the paired device.
+        "400":
+          description: Error while executing the command
+        "404":
+          description: Pairing not found.
+  /paired-devices/{pairingId}/ready:
+    get:
+      description: Check whether the device is ready for executing commands.
+      operationId: isDeviceReady
+      parameters:
+      - description: Pairing ID
+        explode: false
+        in: path
+        name: pairingId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: boolean
+          description: Successfully checked whether device is ready.
+        "404":
+          description: Pairing not found.
+components:
+  schemas:
+    DeviceDriver:
+      example:
+        driverId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        authenticationMethod: NONE
+        displayName: displayName
+        description: description
+      properties:
+        driverId:
+          description: The ID of the device driver.
+          format: uuid
+          title: driverId
+          type: string
+        displayName:
+          description: Name of the device driver; might be displayed in a UI.
+          title: displayName
+          type: string
+        description:
+          description: Description for the plugin that might be displayed in a UI.
+          title: description
+          type: string
+        authenticationMethod:
+          description: The authentication method to be used when connecting to a device
+            provided by the driver.
+          enum:
+          - NONE
+          - PIN
+          - PASSWORD
+          - USER_AND_PASSWORD
+          title: authenticationMethod
+          type: string
+      title: DeviceDriver
+      type: object
+    DeviceDrivers:
+      items:
+        $ref: '#/components/schemas/DeviceDriver'
+      type: array
+    DeviceInfo:
+      example:
+        name: name
+        deviceId: deviceId
+      properties:
+        deviceId:
+          description: The ID of the device.
+          title: deviceId
+          type: string
+        name:
+          description: The device name.
+          title: name
+          type: string
+      title: DeviceInfo
+      type: object
+    DeviceInfos:
+      items:
+        $ref: '#/components/schemas/DeviceInfo'
+      type: array
+    StartPairingRequest:
+      example:
+        remoteName: remoteName
+      properties:
+        remoteName:
+          description: The name of the remote.
+          title: remoteName
+          type: string
+      title: StartPairingRequest
+      type: object
+    StartPairingResponse:
+      example:
+        deviceProvidesPin: true
+        pairingRequest: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        pairingRequest:
+          description: The pairing request ID.
+          format: uuid
+          title: pairingRequest
+          type: string
+        deviceProvidesPin:
+          description: This flag determines whether the device shows a PIN that must
+            be entered in the client.
+          title: deviceProvidesPin
+          type: boolean
+      title: StartPairingResponse
+      type: object
+    FinalizePairingRequest:
+      example:
+        deviceProvidesPin: true
+        pin: pin
+      properties:
+        pin:
+          description: The PIN entered by the user
+          title: pin
+          type: string
+        deviceProvidesPin:
+          description: This flag determines whether the device shows a PIN that must
+            be entered in the client.
+          title: deviceProvidesPin
+          type: boolean
+      title: FinalizePairingRequest
+      type: object
+    FinalizePairingResponse:
+      example:
+        deviceHasPaired: true
+      properties:
+        deviceHasPaired:
+          description: This flag determines whether the device was successfully paired.
+          title: deviceHasPaired
+          type: boolean
+      title: FinalizePairingResponse
+      type: object
+    PairedDevice:
+      example:
+        driverId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        pairingId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        deviceId: deviceId
+        deviceName: deviceName
+      properties:
+        pairingId:
+          description: The pairing ID of the paired device.
+          format: uuid
+          title: pairingId
+          type: string
+        driverId:
+          description: The driver ID of the paired device.
+          format: uuid
+          title: driverId
+          type: string
+        deviceId:
+          description: The device ID of the paired device.
+          title: deviceId
+          type: string
+        deviceName:
+          description: Name of the device.
+          title: deviceName
+          type: string
+      title: PairedDevice
+      type: object
+    PairedDevices:
+      items:
+        $ref: '#/components/schemas/PairedDevice'
+      type: array
+    DeviceCommand:
+      example:
+        driverId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        pairingId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        name: name
+        icon: icon
+        deviceId: deviceId
+        commandId: 0
+      properties:
+        pairingId:
+          description: The pairing ID of the paired device.
+          format: uuid
+          title: pairingId
+          type: string
+        driverId:
+          description: The driver ID of the paired device.
+          format: uuid
+          title: driverId
+          type: string
+        deviceId:
+          description: The ID of the paired device.
+          title: deviceId
+          type: string
+        commandId:
+          description: The command ID.
+          title: commandId
+          type: integer
+        name:
+          description: The command name.
+          title: name
+          type: string
+        icon:
+          description: Base64 encoded data of the command icon.
+          format: byte
+          title: icon
+          type: string
+      title: DeviceCommand
+      type: object
+    DeviceCommands:
+      items:
+        $ref: '#/components/schemas/DeviceCommand'
+      type: array
+    RemoteLayout:
+      example:
+        buttons:
+        - - 1
+          - 1
+        - - 1
+          - 1
+        width: 0
+        height: 6
+      properties:
+        width:
+          description: Width of the layout
+          title: width
+          type: integer
+        height:
+          description: Height of the layout
+          title: height
+          type: integer
+        buttons:
+          description: Array with the command IDs for the buttons
+          items:
+            items:
+              type: integer
+            type: array
+          title: buttons
+          type: array
+      title: RemoteLayout
+      type: object
