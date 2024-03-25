@@ -4,7 +4,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0
+  version: 0.2.0
 
 paths:
   ##### Pairing Devices #####
@@ -32,7 +32,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         "200":
           description: Successfully read the devices
@@ -55,7 +54,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
         - name: deviceId
           in: path
           description: Device ID
@@ -89,7 +87,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
         - name: deviceId
           in: path
           description: Device ID
@@ -102,7 +99,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       requestBody:
         content:
           application/json:
@@ -145,7 +141,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         "204":
           description: Successfully read the unpaired the device.
@@ -162,7 +157,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         "200":
           description: Successfully read the commands of the paired device.
@@ -185,7 +179,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         "200":
           description: Successfully read the remote of the paired device.
@@ -208,7 +201,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
         - name: commandId
           in: path
           description: Command ID
@@ -233,7 +225,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         "200":
           description: Successfully checked whether device is ready.
@@ -251,7 +242,6 @@ components:
       properties:
         driverId:
           type: string
-          format: uuid
           description: The ID of the device driver.
         displayName:
           type: string
@@ -295,7 +285,6 @@ components:
       properties:
         pairingRequest:
           type: string
-          format: uuid
           description: The pairing request ID.
         deviceProvidesPin:
           type: boolean
@@ -320,11 +309,9 @@ components:
       properties:
         pairingId:
           type: string
-          format: uuid
           description: The pairing ID of the paired device.
         driverId:
           type: string
-          format: uuid
           description: The driver ID of the paired device.
         deviceId:
           type: string
@@ -341,11 +328,9 @@ components:
       properties:
         pairingId:
           type: string
-          format: uuid
           description: The pairing ID of the paired device.
         driverId:
           type: string
-          format: uuid
           description: The driver ID of the paired device.
         deviceId:
           type: string
