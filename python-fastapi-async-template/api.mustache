@@ -65,7 +65,8 @@ async def {{operationId}}(
     {{/hasAuthMethods}}
 ) -> {{returnType}}{{^returnType}}None{{/returnType}}:
     {{#notes}}"""{{.}}"""
-    return await Base{{classname}}.subclasses[0]().{{operationId}}({{#allParams}}{{>impl_argument}}{{^-last}}, {{/-last}}{{/allParams}}){{/notes}}{{^notes}}...{{/notes}}
+    instance = Base{{classname}}.subclasses[0]()
+    return await instance.{{operationId}}({{#allParams}}{{>impl_argument}}{{^-last}}, {{/-last}}{{/allParams}}){{/notes}}{{^notes}}...{{/notes}}
 {{^-last}}
 
 
