@@ -19,7 +19,7 @@ class BaseDefaultApi:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         BaseDefaultApi.subclasses = BaseDefaultApi.subclasses + (cls,)
-    def execute_device_command(
+    async def execute_device_command(
         self,
         pairingId: str,
         commandId: int,
@@ -28,7 +28,7 @@ class BaseDefaultApi:
         ...
 
 
-    def finalize_pairing(
+    async def finalize_pairing(
         self,
         driverId: str,
         deviceId: str,
@@ -39,7 +39,7 @@ class BaseDefaultApi:
         ...
 
 
-    def is_device_ready(
+    async def is_device_ready(
         self,
         pairingId: str,
     ) -> bool:
@@ -47,7 +47,7 @@ class BaseDefaultApi:
         ...
 
 
-    def read_device_commands(
+    async def read_device_commands(
         self,
         pairingId: str,
     ) -> List[DeviceCommand]:
@@ -55,14 +55,14 @@ class BaseDefaultApi:
         ...
 
 
-    def read_device_drivers(
+    async def read_device_drivers(
         self,
     ) -> List[DeviceDriver]:
         """Read all installed device drivers"""
         ...
 
 
-    def read_device_remote_layout(
+    async def read_device_remote_layout(
         self,
         pairingId: str,
     ) -> RemoteLayout:
@@ -70,7 +70,7 @@ class BaseDefaultApi:
         ...
 
 
-    def read_devices(
+    async def read_devices(
         self,
         driverId: str,
     ) -> List[DeviceInfo]:
@@ -78,14 +78,14 @@ class BaseDefaultApi:
         ...
 
 
-    def read_paired_devices(
+    async def read_paired_devices(
         self,
     ) -> List[PairedDevice]:
         """Read the list of paired devices."""
         ...
 
 
-    def start_pairing(
+    async def start_pairing(
         self,
         driverId: str,
         deviceId: str,
@@ -95,7 +95,7 @@ class BaseDefaultApi:
         ...
 
 
-    def unpair_device(
+    async def unpair_device(
         self,
         pairingId: str,
     ) -> None:
