@@ -55,7 +55,8 @@ async def execute_device_command(
     commandId: int = Path(..., description="Command ID"),
 ) -> None:
     """Execute the command on the paired device."""
-    return BaseDefaultApi.subclasses[0]().execute_device_command(pairingId, commandId)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.execute_device_command(pairingId, commandId)
 
 
 @router.post(
@@ -75,7 +76,8 @@ async def finalize_pairing(
     finalize_pairing_request: FinalizePairingRequest = Body(None, description=""),
 ) -> FinalizePairingResponse:
     """Finalize the pairing process for the device with the given device ID."""
-    return BaseDefaultApi.subclasses[0]().finalize_pairing(driverId, deviceId, pairingRequestId, finalize_pairing_request)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.finalize_pairing(driverId, deviceId, pairingRequestId, finalize_pairing_request)
 
 
 @router.get(
@@ -91,7 +93,8 @@ async def is_device_ready(
     pairingId: str = Path(..., description="Pairing ID"),
 ) -> bool:
     """Check whether the device is ready for executing commands."""
-    return BaseDefaultApi.subclasses[0]().is_device_ready(pairingId)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.is_device_ready(pairingId)
 
 
 @router.get(
@@ -108,7 +111,8 @@ async def read_device_commands(
     pairingId: str = Path(..., description="Pairing ID"),
 ) -> List[DeviceCommand]:
     """Get the commands supported by the device."""
-    return BaseDefaultApi.subclasses[0]().read_device_commands(pairingId)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.read_device_commands(pairingId)
 
 
 @router.get(
@@ -123,7 +127,8 @@ async def read_device_commands(
 async def read_device_drivers(
 ) -> List[DeviceDriver]:
     """Read all installed device drivers"""
-    return BaseDefaultApi.subclasses[0]().read_device_drivers()
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.read_device_drivers()
 
 
 @router.get(
@@ -140,7 +145,8 @@ async def read_device_remote_layout(
     pairingId: str = Path(..., description="Pairing ID"),
 ) -> RemoteLayout:
     """Get the layout of the remote control for the device."""
-    return BaseDefaultApi.subclasses[0]().read_device_remote_layout(pairingId)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.read_device_remote_layout(pairingId)
 
 
 @router.get(
@@ -157,7 +163,8 @@ async def read_devices(
     driverId: str = Path(..., description="Driver ID"),
 ) -> List[DeviceInfo]:
     """Read all devices that are supported by the driver with the given driver ID"""
-    return BaseDefaultApi.subclasses[0]().read_devices(driverId)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.read_devices(driverId)
 
 
 @router.get(
@@ -172,7 +179,8 @@ async def read_devices(
 async def read_paired_devices(
 ) -> List[PairedDevice]:
     """Read the list of paired devices."""
-    return BaseDefaultApi.subclasses[0]().read_paired_devices()
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.read_paired_devices()
 
 
 @router.post(
@@ -191,7 +199,8 @@ async def start_pairing(
     start_pairing_request: StartPairingRequest = Body(None, description=""),
 ) -> StartPairingResponse:
     """Start the pairing process for the device with the given device ID."""
-    return BaseDefaultApi.subclasses[0]().start_pairing(driverId, deviceId, start_pairing_request)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.start_pairing(driverId, deviceId, start_pairing_request)
 
 
 @router.delete(
@@ -207,4 +216,5 @@ async def unpair_device(
     pairingId: str = Path(..., description="Pairing ID"),
 ) -> None:
     """Unpair the device."""
-    return BaseDefaultApi.subclasses[0]().unpair_device(pairingId)
+    instance = BaseDefaultApi.subclasses[0]()
+    return await instance.unpair_device(pairingId)
